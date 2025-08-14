@@ -1,0 +1,17 @@
+export const branchColors:string[] = [
+  "#ff6b6b",
+  "#4ecdc4",
+  "#45b7d1",
+  "#96ceb4",
+  "#feca57",
+  "#ff9ff3",
+  "#54a0ff",
+  "#5f27cd",
+  "#00d2d3",
+  "#ff9f43",
+  "#686de0",
+  "#4834d4",
+  "#dda0dd",
+  "#98d8c8",
+  "#f7b801",
+];

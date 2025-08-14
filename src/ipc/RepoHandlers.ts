@@ -25,8 +25,23 @@ export class RepoHandlers {
       deleteRepo(id);
       return getRepos();
     });
-    ipcMain.handle("git-fetch", (_, name: string, path: string) => {
+    ipcMain.handle("git-fetch", (_, path: string) => {
+      if (!path) return;
       return this.gitFetch(_, path);
+    });
+    ipcMain.handle("list-branches", async (_, repoPath: string) => {
+      return this.listBranches(_, repoPath);
+    });
+
+    ipcMain.handle(
+      "checkout-branch",
+      async (_, repoPath: string, branch: string) => {
+        return this.checkoutBranch(_, repoPath, branch);
+      }
+    );
+
+    ipcMain.handle("branch-graph", async (_, repoPath: string) => {
+      return this.getGraph(_, repoPath);
     });
   }
 
@@ -78,7 +93,13 @@ export class RepoHandlers {
     try {
       const result = await this.runGitCommand(repoPath, "pull");
       return { success: true, output: result };
-    } catch (err) {
+    } catch (err: any) {
+      if (String(err).toLowerCase().includes("authentication failed")) {
+        return {
+          success: false,
+          error: "Authentication failed. Please check your Git credentials.",
+        };
+      }
       return { success: false, error: err };
     }
   }
@@ -87,7 +108,13 @@ export class RepoHandlers {
     try {
       const result = await this.runGitCommand(repoPath, "push");
       return { success: true, output: result };
-    } catch (err) {
+    } catch (err: any) {
+      if (String(err).toLowerCase().includes("authentication failed")) {
+        return {
+          success: false,
+          error: "Authentication failed. Please check your Git credentials.",
+        };
+      }
       return { success: false, error: err };
     }
   }
@@ -96,6 +123,48 @@ export class RepoHandlers {
     try {
       const result = await this.runGitCommand(repoPath, "fetch");
       return { success: true, output: result };
+    } catch (err) {
+      if (String(err).toLowerCase().includes("authentication failed")) {
+        return {
+          success: false,
+          error: "Authentication failed. Please check your Git credentials.",
+        };
+      }
+      return { success: false, error: err };
+    }
+  }
+
+  private async listBranches(_, repoPath) {
+    try {
+      const branches = await this.runGitCommand(
+        repoPath,
+        "branch --all --color=never"
+      );
+      return {
+        success: true,
+        branches: branches.split("\n").map((b) => b.trim()),
+      };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  }
+
+  private async checkoutBranch(_, repoPath, branch) {
+    try {
+      await this.runGitCommand(repoPath, `checkout ${branch}`);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  }
+
+  private async getGraph(_, repoPath) {
+    try {
+      const graph = await this.runGitCommand(
+        repoPath,
+        `log --graph --decorate --oneline --all --color=never`
+      );
+      return { success: true, graph: graph.split("\n") };
     } catch (err) {
       return { success: false, error: err };
     }

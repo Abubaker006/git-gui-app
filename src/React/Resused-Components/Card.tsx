@@ -7,7 +7,7 @@ const Card: React.FC<{
 }> = ({ children, className = "", padding = true }) => {
   return (
     <div
-      className={`bg-white rounded-xl shadow-lg border border-gray-200 ${padding ? "p-6" : ""} ${className}`}
+      className={`rounded-xl shadow-lg border border-gray-200 ${padding ? "p-6" : ""} ${className}`}
     >
       {children}
     </div>
