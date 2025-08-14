@@ -43,9 +43,20 @@ This project is currently under development and soon its package-installer will 
 ## Usage
 `npm run start`
 
-# 🤝 Contributing
+# 📢 Contribution Guidelines
 
 We welcome all contributions — whether it’s bug fixes, feature suggestions, or documentation improvements.
+However:
+
+1. Please credit the original authors when sharing your modified version.
+
+2. You cannot claim this project as your own original creation — even if you’ve made changes.
+
+3. All pull requests will be reviewed before merging.
+
+4. By contributing, you agree that your changes will be released under the same MIT License.
+
+## To Contribute,
 
 1. Fork the repository
 
@@ -64,3 +75,4 @@ We welcome all contributions — whether it’s bug fixes, feature suggestions, 
 # 📜 License
 
 This project is licensed under the MIT License — see the LICENSE file for details.
+
